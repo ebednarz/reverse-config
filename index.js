@@ -1,6 +1,6 @@
 'use strict';
 var config = {};
-var numericExpression = /^\d+$/;
+var numericExpression = /^-?\d+$/;
 var PREFIX = 'npm_package_config_';
 var bucket;
 
