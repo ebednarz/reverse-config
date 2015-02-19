@@ -6,17 +6,17 @@
 
     $ npm install reverse-config
 
-## Reverse config, [what is it good for](http://en.wikipedia.org/wiki/The_Marine_Biologist#Plot)?
+## Reverse config, [What is it Good For](http://en.wikipedia.org/wiki/The_Marine_Biologist#Plot)?
 
 - homegrown config files contribute to local project clutter and global
   fragmentation; npm loves you, please love it back
+- users can
+  [override package.json `config` values](https://docs.npmjs.com/files/package.json#config)
+  without further ado; npm loves you, please love it back
 - package.json `config` values become available as environment variables for
   npm `scripts`, but substitution syntax is shell dependent and accessing them
   programmatically can be slightly to extremely painful, depending on the
   config object's complexity
-- users can
-  [override package.json `config` values](https://docs.npmjs.com/files/package.json#config)
-  without further ado; npm loves you, please love it back
 
 ### Wait, can't I simply do something like `require(path.resolve('package.json')).config`?
 
@@ -25,19 +25,67 @@ corresponding object property might have different values.
 
 ## Gotchas
 
-Don't use underscores in package.json `config` property names. Given
+### TL;DR
+
+- `config` object property names
+    - MUST NOT be numeric
+    - SHOULD NOT contain underscores
+- `config` values SHOULD NOT be
+    - numeric strings
+    - the string literals "true", "false" or "null"
+
+Mnemonic version: Don't be silly.
+
+### Ambiguities
+
+Given either
+
+    {
+      "config": {
+        "foo": [
+          42
+        ]
+      }
+    }
+
+or
 
     {
       "config": {
         "foo": {
-          "bar": 13
-        },
+          "0": 42
+        }
+      }
+    }
+
+the resulting environment variable is `npm_package_config_foo_0`.
+The reversed config object is
+
+    {
+      "foo": [
+        42
+      ]
+    }
+
+Likewise, given either
+
+    {
+      "config": {
+        "foo": {
+          "bar": 42
+        }
+    }
+
+or
+
+    {
+      "config": {
         "foo_bar": 42
       }
     }
 
-the value of `npm_package_config_foo_bar` is 42, not 13. The reversed
-config object is
+the resulting environment variable is `npm_package_config_foo_bar`.
+The reversed config object is
 
     {
       "foo": {
