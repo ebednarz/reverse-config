@@ -4,6 +4,7 @@
   "author": "Eric Bednarz <github@bednarz.nl>",
   "description": "Reverse npm package config environment variables into an object.",
   "keywords": [
+    "config",
     "env",
     "npm"
   ],
@@ -11,8 +12,5 @@
     "type": "git",
     "url": "git@github.com:ebednarz/reverse-config.git"
   },
-  "license": "MIT",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+  "license": "MIT"
 }
