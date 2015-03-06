@@ -1,4 +1,4 @@
-# reverse-config  [![npm version][npm-image]][npm-url] [![npm dependencies][david-image]][david-url]
+# reverse-config [![npm version][npm-image]][npm-url]
 
 > Reverse npm package config environment variables into an object.
 
@@ -110,8 +110,6 @@ config object.
 
 MIT
 
-[david-image]: https://img.shields.io/david/ebednarz/reverse-config.svg?style=flat-square
-[david-url]: https://david-dm.org/ebednarz/reverse-config
 [npm-image]: https://img.shields.io/npm/v/reverse-config.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/reverse-config
 
