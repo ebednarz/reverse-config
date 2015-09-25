@@ -1,5 +1,6 @@
 'use strict';
 var config = {};
+var identifierExpression = /^[a-z]+$/i;
 var numericExpression = /^-?\d+$/;
 var PREFIX = 'npm_package_config_';
 var bucket;
@@ -21,17 +22,55 @@ function mangle(value) {
     return value;
 }
 
+function collapse(input) {
+    return input
+        .replace(/_{2,}/, '_')
+        .replace(/^_/, '')
+        .replace(/_$/, '')
+}
+
+function split(input) {
+    return input.split('_');
+}
+
+function resolve(name) {
+    var tokenList = split(collapse(name.replace(/[^a-z\d]/gi, '_')));
+    var result = config;
+    var match = tokenList.every(function (token) {
+        result = result[token];
+        return (undefined !== result);
+    });
+
+    return match
+        ? result
+        : undefined;
+}
+
+function get(key) {
+    switch (typeof key) {
+    case 'string':
+        return identifierExpression.test(key)
+            ? config[key]
+            : resolve(key);
+    case 'undefined':
+        return config;
+    default:
+        throw new TypeError('expected undefined or string argument');
+    }
+}
+
 Object.keys(process.env).forEach(function (variable) {
-    var tokens;
+    var tokenList;
 
     if (0 !== variable.indexOf(PREFIX)) {
         return;
     }
 
     bucket = config;
-    tokens = variable.substring(PREFIX.length).split('_');
-    tokens.forEach(function (key, index) {
-        var next = tokens[index + 1];
+    tokenList = split(collapse(variable.substring(PREFIX.length)));
+
+    tokenList.forEach(function (key, index) {
+        var next = tokenList[index + 1];
 
         if (!next) {
             bucket[key] = mangle(process.env[variable]);
@@ -46,4 +85,4 @@ Object.keys(process.env).forEach(function (variable) {
     });
 });
 
-module.exports = config;
+exports.get = get;

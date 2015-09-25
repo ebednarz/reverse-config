@@ -1,9 +1,14 @@
 {
   "name": "reverse-config",
   "version": "0.0.3",
+  "license": "MIT",
   "author": "Eric Bednarz <github@bednarz.nl>",
   "description": "Reverse npm package config environment variables into an object.",
+  "scripts": {
+    "test": "mocha test/suite"
+  },
   "keywords": [
+    "build",
     "config",
     "env",
     "npm"
@@ -12,5 +17,8 @@
     "type": "git",
     "url": "git@github.com:ebednarz/reverse-config.git"
   },
-  "license": "MIT"
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3"
+  }
 }

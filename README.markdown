@@ -6,37 +6,34 @@
 
     $ npm install reverse-config
 
-## Reverse config, [What is it Good For](http://en.wikipedia.org/wiki/The_Marine_Biologist#Plot)?
+## reverse-config, [What is it Good For](http://en.wikipedia.org/wiki/The_Marine_Biologist#Plot)?
 
-- homegrown config files contribute to local project clutter and global
-  fragmentation; npm loves you, please love it back
-- users can
-  [override package.json `config` values](https://docs.npmjs.com/files/package.json#config)
-  without further ado; npm loves you, please love it back
-- package.json `config` values become available as environment variables for
-  npm `scripts`, but substitution syntax is shell dependent and accessing them
-  programmatically can be slightly to extremely painful, depending on the
-  config object's complexity
+- use built in `npm` functionality instead of homegrown configuration formats and parsers
+- [selectively override configuration](https://docs.npmjs.com/files/package.json#config) 
+  for local development in your `~/.npmrc`
 
-### Wait, can't I simply do something like `require(path.resolve('package.json')).config`?
+Essentially, this package is just syntactic sugar for reading 
+`npm_package_config_*` properties from `process.env`.
 
-That would be a rather terrible idea, because the environment variable and the
-corresponding object property might have different values.
+## Usage
+
+    var reverseConfig = require('reverse-config');
+    reverseConfig.get({string} [key])
+    
+- if `key` is undefined, the entire configuration object is returned
+- if `key` is alphanumeric, it is used as property accessor for the configuration object 
+- otherwise
+    - all non-alphanumeric characters are replaced by underscores
+    - consecutive underscores are collapsed to a single one
+    - leading and trailing underscores are stripped
+    - the remaining value is split with the underscore and used as a 'deep' property accessor
+        - example: `.get('@my.scoped/package')` would try to access 
+          `.my.scoped.message` in the configuration object
 
 ## Gotchas
 
-### TL;DR
-
-- `config` object property names
-    - MUST NOT be numeric
-    - SHOULD NOT contain underscores
-- `config` values SHOULD NOT be
-    - numeric strings
-    - the string literals "true", "false" or "null"
-
-Mnemonic version: Don't be silly.
-
-### Ambiguities
+The `npm` transformation of the package.json `config` object 
+to environment variables is a destructive process.
 
 Given either
 
@@ -58,43 +55,33 @@ or
       }
     }
 
-the resulting environment variable is `npm_package_config_foo_0`.
-The reversed config object is
-
-    {
-      "foo": [
-        42
-      ]
-    }
-
-Likewise, given either
+or 
 
     {
       "config": {
-        "foo": {
-          "bar": 42
-        }
+        "foo_0": "42"
+      }
     }
 
-or
+the resulting environment variable name is `npm_package_config_foo_0`, 
+and its value the string '42'.
+
+Rule of thumb: only use alphanumeric property names.
+
+The *useful* exception would be package names used as config *sections*, e.g.
 
     {
       "config": {
-        "foo_bar": 42
+        "my_package": {},
+        "@my.scope/my-package": {},
       }
     }
 
-the resulting environment variable is `npm_package_config_foo_bar`.
-The reversed config object is
+Use with moderation and pretend to be a responsible adult.
 
-    {
-      "foo": {
-        "bar": 42
-      }
-    }
+### Values
 
-Since creating environment variables from JSON is a somewhat destructive
-one-way process, values are coerced during reversion with good faith as follows:
+During reversion values are coerced with good faith as follows:
 
 - numeric string => {number}
 - 'true' => {boolean} true
@@ -112,4 +99,3 @@ MIT
 
 [npm-image]: https://img.shields.io/npm/v/reverse-config.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/reverse-config
-
