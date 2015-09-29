@@ -1,6 +1,6 @@
 {
   "name": "reverse-config",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "license": "MIT",
   "author": "Eric Bednarz <github@bednarz.nl>",
   "description": "Reverse npm package config environment variables into an object.",
