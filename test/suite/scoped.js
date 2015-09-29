@@ -6,7 +6,7 @@ var getReverseConfig = require('../library/get-reverse-config');
 describe('The `reverse-config` module', function () {
     beforeEach(resetRequireCache);
 
-    it('can resolve package names used as a getter key', function () {
+    it('can resolve scoped package names used as a getter argument', function () {
         var reverseConfig = getReverseConfig({
             'my_scope_mypackage_key': 'Config value'
         });
