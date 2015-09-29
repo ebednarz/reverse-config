@@ -1,4 +1,4 @@
-# reverse-config [![npm version][npm-image]][npm-url]
+# reverse-config [![npm version][npm-image]][npm-url] [![build status][travis-image]][travis-url]
 
 > Reverse npm package config environment variables into an object.
 
@@ -99,3 +99,5 @@ MIT
 
 [npm-image]: https://img.shields.io/npm/v/reverse-config.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/reverse-config
+[travis-image]: https://img.shields.io/travis/ebednarz/reverse-config.svg?style=flat-square
+[travis-url]: https://travis-ci.org/ebednarz/reverse-config
